@@ -11,6 +11,11 @@
       @submit.prevent="onSubmit"
     >
       <h1>Signing in</h1>
+      <v-progress-linear
+        :active="loading"
+        indeterminate
+        color="yellow darken-2"
+      ></v-progress-linear>
       <v-text-field
         v-model="username"
         label="Username"
@@ -49,6 +54,8 @@ export default class Login extends Vue {
   username: String = "";
   password: String = "";
 
+  loading: Boolean = false;
+
   rules: Object = {
     required: (v: string) => !!v || "This fields is required",
   };
@@ -66,10 +73,12 @@ export default class Login extends Vue {
   }
 
   onSubmit(): void {
+    this.loading = true;
     this.$store.dispatch('login', {
       username: this.username,
       password: this.password,
     }).then(() => {
+      this.loading = false;
       this.$router.push('/profile');
     })
   }

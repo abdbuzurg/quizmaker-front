@@ -1,10 +1,12 @@
 import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router'
+import store from '@/store';
+
 import Home from '../views/Home.vue'
 
 Vue.use(VueRouter)
 
-  const routes: Array<RouteConfig> = [
+const routes: Array<RouteConfig> = [
   {
     path: '/',
     name: 'Home',
@@ -20,7 +22,11 @@ Vue.use(VueRouter)
   },
   {
     path: '/profile',
-    component: () => import('@/views/Profile.vue')
+    component: () => import('@/views/Profile.vue'),
+    beforeEnter: (to: any, from: any, next: any ): void => {
+      if(store.getters.getUser) next();
+      else next("/login");
+    }
   },
   {
     path: '/settings',

@@ -7,6 +7,12 @@
       @submit.prevent="onSubmit" 
       lazy-validation
     >
+      <h1>Signing up</h1>
+      <v-progress-linear
+        :active="loading"
+        indeterminate
+        color="yellow darken-2"
+      ></v-progress-linear>
       <v-text-field 
         v-model="user.username"
         label="Username"
@@ -73,7 +79,7 @@ export default class Register extends Vue {
     lastName: "",
   }
   confirmPassword: String = "";
-  
+  loading: Boolean = false;
   
   rules: Object = {
     required: (v: string): String | Boolean => !!v || "This field is required",
@@ -91,8 +97,10 @@ export default class Register extends Vue {
   }
 
   onSubmit(): void {
+    this.loading = true;
     this.$store.dispatch('register', this.user)
       .then(() => {
+        this.loading = false;
         this.$router.push('/login');
       });
   }
